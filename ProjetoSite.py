@@ -31,7 +31,7 @@ def app():
     )
 
     st.image(
-        image=r"C:\Users\naydson\Downloads\image-Photoroom.png",
+        image="image-Photoroom.png",
         width=50
     )
     st.title("Chatbot de IA")
@@ -85,7 +85,7 @@ if nome:
 st.sidebar.header("", divider=True) 
 st.sidebar.header("Informações do meu desenvolvedor")
 st.sidebar.image(
-    image=r"C:\Users\naydson\Downloads\Captura de tela 2025-11-15 180148.png",
+    image="Captura de tela 2025-11-15 180148.png",
 
     caption="Naydson Teixeira Silva",
 
@@ -104,4 +104,5 @@ st.sidebar.markdown("""
 st.sidebar.write("")
 
 # colunas
+
 colunas = st.columns(2)
