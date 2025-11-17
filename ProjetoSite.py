@@ -94,7 +94,7 @@ st.sidebar.image(
 
 st.sidebar.markdown("""
 * IDADE : **18 anos**
-* CURSANDO : **Ensino Médio**
+* CURSANDO : **3° ano do Ensino Médio**
 * TELEFONE : **(87) 98105-8522**
 * EMAIL : **naydsonsilvaaaa@gmail.com**
 * LOCALIDADE : **Volta do Moxoto - Jatoba - PE**
@@ -106,4 +106,5 @@ st.sidebar.write("")
 # colunas
 
 colunas = st.columns(2)
+
 
