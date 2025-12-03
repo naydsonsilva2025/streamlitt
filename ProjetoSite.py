@@ -1,25 +1,20 @@
 import streamlit as st
-import requests
+from openai import OpenAI
+
+client = OpenAI(api_key="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")  # coloque sua chave aqui
 
 def gerar_resposta(prompt):
     try:
-        # Faz a requisição para o servidor local do Ollama
-        resposta = requests.post(
-            "http://localhost:11434/api/generate",
-            json={"model": "phi", "prompt": prompt},
-            timeout=60  # tempo máximo de espera (em segundos)
+        resposta = client.chat.completions.create(
+            model="gpt-4.1-mini", 
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=500
         )
+        return resposta.choices[0].message["content"]
 
-        if resposta.status_code == 200:
-            dados = resposta.json()
-            return dados.get("response", "❌ Sem resposta gerada.")
-        else:
-            return f"❌ Erro {resposta.status_code}: {resposta.text}"
-
-    except requests.exceptions.ConnectionError:
-        return "Erro !"
     except Exception as e:
-        return f"❌ Erro inesperado: {e}"
+        return f"❌ Erro ao gerar resposta: {e}"
+
 
 
 # titulo
@@ -106,6 +101,3 @@ st.sidebar.write("")
 # colunas
 
 colunas = st.columns(2)
-
-
-
