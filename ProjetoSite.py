@@ -17,7 +17,7 @@ def gerar_resposta(prompt):
             return f"❌ Erro {resposta.status_code}: {resposta.text}"
 
     except requests.exceptions.ConnectionError:
-        return "Eu sou apaixonado em você, minha princesa ! 🤍"
+        return "Erro !"
     except Exception as e:
         return f"❌ Erro inesperado: {e}"
 
@@ -106,5 +106,6 @@ st.sidebar.write("")
 # colunas
 
 colunas = st.columns(2)
+
 
 
