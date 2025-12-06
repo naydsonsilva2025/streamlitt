@@ -1,16 +1,22 @@
 import streamlit as st
 from openai import OpenAI
+from dotenv import load_dotenv
+import os
 
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+load_dotenv()
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def gerar_resposta(prompt):
     try:
         resposta = client.chat.completions.create(
-            model="gpt-4.1-mini", 
+            model="gpt-4.1", 
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=500
+            max_tokens=1500,
+            temperature=0.7
         )
-        return resposta.choices[0].message["content"]
+        return resposta.choices[0].message.content
+
 
     except Exception as e:
         return f"❌ Erro ao gerar resposta: {e}"
@@ -48,7 +54,6 @@ def app():
         with st.chat_message("user"):
             st.markdown(mensagem_usuario)
 
-            # Gera resposta com o Ollama (modelo phi)
         resposta_texto = gerar_resposta(mensagem_usuario)
 
         # Exibe a resposta do assistente
@@ -101,7 +106,4 @@ st.sidebar.write("")
 # colunas
 
 colunas = st.columns(2)
-
-
-
 
