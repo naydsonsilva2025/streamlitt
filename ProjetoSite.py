@@ -1,7 +1,11 @@
 import streamlit as st
 from openai import OpenAI
+from dotenv import load_dotenv
+import os
 
-client = OpenAI(api_key="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")
+load_dotenv()
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def gerar_resposta(prompt):
     try:
@@ -101,5 +105,6 @@ st.sidebar.write("")
 # colunas
 
 colunas = st.columns(2)
+
 
 
