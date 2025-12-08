@@ -1,104 +1,64 @@
+# arquivo: debug_openai_streamlit.py (substitua temporariamente no app)
 import streamlit as st
-from openai import OpenAI
 import os
+import traceback
+import time
 
-# 🔥 TEM QUE SER A PRIMEIRA COISA DO ARQUIVO
-st.set_page_config(
-    page_title="ChatBot - Naydson",
-    page_icon="https://static.vecteezy.com/ti/vetor-gratis/p1/23060823-chatgpt-conceito-artificial-inteligencia-chatbot-neon-logotipo-em-preto-fundo-gratis-vetor.jpg"
-)
+# 0) show top instruction
+st.title("DEBUG: verificar OPENAI secret e conexão")
 
-os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
-client = OpenAI()
+# 1) mostrar se secrets existe (não mostre a chave inteira)
+try:
+    secret = st.secrets.get("OPENAI_API_KEY", None)
+    st.write("secrets carregado?:", secret is not None)
+    if secret is not None:
+        # mostrar apenas começo e fim para confirmar que é completa (sem expor tudo)
+        st.write("preview da key:", secret[:8] + "..." + secret[-6:])
+        st.write("tamanho da key (caracteres):", len(secret))
+    else:
+        st.error("st.secrets['OPENAI_API_KEY'] é None — verifique painel Secrets no Streamlit Cloud.")
+except Exception as e:
+    st.error("Erro lendo st.secrets: " + str(e))
+    st.text(traceback.format_exc())
 
+# 2) setar variável de ambiente ANTES de importar client (faz aqui antes de qualquer import da SDK)
+if secret:
+    os.environ["OPENAI_API_KEY"] = secret
+    st.write("Variável de ambiente OPENAI_API_KEY definida no processo.")
 
-def gerar_resposta(prompt):
-    try:
-        resposta = client.chat.completions.create(
-            model="gpt-4.1",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=1500,
-            temperature=0.7
-        )
-        return resposta.choices[0].message.content
+# 3) importar OpenAI AGORA (depois de setar env)
+try:
+    from openai import OpenAI
+    st.write("OpenAI SDK importado com sucesso.")
+except Exception as e:
+    st.error("Erro ao importar OpenAI SDK: " + str(e))
+    st.text(traceback.format_exc())
+    st.stop()
 
-    except Exception as e:
-        return f"❌ Erro ao gerar resposta: {e}"
+# 4) inicializar client sem api_key= (deixe a lib usar env)
+try:
+    client = OpenAI()
+    st.write("Cliente OpenAI inicializado (instância criada).")
+except Exception as e:
+    st.error("Erro ao criar client = OpenAI(): " + str(e))
+    st.text(traceback.format_exc())
+    st.stop()
 
-
-# -------------------------------
-# APP PRINCIPAL
-# -------------------------------
-def app():
-
-    st.image("image-Photoroom.png", width=50)
-    st.title("Chatbot de IA")
-
-    # Inicializa o histórico
-    if "mensagens" not in st.session_state:
-        st.session_state["mensagens"] = []
-
-    # Exibe mensagens antigas
-    for mensagem in st.session_state["mensagens"]:
-        with st.chat_message(mensagem["usuario"]):
-            st.markdown(mensagem["texto"])
-
-    # Entrada do usuário
-    mensagem_usuario = st.chat_input("Digite aqui sua mensagem...")
-
-    if mensagem_usuario:
-        st.session_state["mensagens"].append(
-            {"usuario": "user", "texto": mensagem_usuario}
-        )
-
-        with st.chat_message("user"):
-            st.markdown(mensagem_usuario)
-
-        resposta_texto = gerar_resposta(mensagem_usuario)
-
-        st.session_state["mensagens"].append(
-            {"usuario": "assistant", "texto": resposta_texto}
-        )
-
-        with st.chat_message("assistant"):
-            st.markdown(resposta_texto)
-
-app()
-
-
-# -------------------------------
-# BARRA LATERAL
-# -------------------------------
-st.sidebar.write("# Cadastro")
-
-nome = st.sidebar.text_input("Digite seu nome:")
-
-if nome:
-    idade = st.sidebar.slider(
-        f"Selecione sua idade, {nome}:",
-        min_value=7, max_value=100
-    )
-
-    if st.sidebar.button("Selecionar"):
-        st.sidebar.success("Armazenado com sucesso!")
-        st.sidebar.write(
-            f"## Olá, **{nome.capitalize()}**!\nVenha conversar comigo."
-        )
-
-st.sidebar.header("", divider=True)
-st.sidebar.header("Informações do meu desenvolvedor")
-
-st.sidebar.image(
-    "Captura de tela 2025-11-15 180148.png",
-    caption="Naydson Teixeira Silva",
-    width=150
-)
-
-st.sidebar.markdown("""
-* IDADE : **18 anos**
-* CURSANDO : **3° ano do Ensino Médio**
-* TELEFONE : **(87) 98105-8522**
-* EMAIL : **naydsonsilvaaaa@gmail.com**
-* LOCALIDADE : **Volta do Moxoto - Jatoba - PE**
-""")
+# 5) Fazer uma requisição de teste (curta) para ver se a key funciona
+if st.button("Fazer requisição de teste à API"):
+    with st.spinner("Chamando OpenAI..."):
+        try:
+            resp = client.chat.completions.create(
+                model="gpt-4.1-mini",
+                messages=[{"role": "user", "content": "Diga olá em uma frase curta."}],
+                max_tokens=20
+            )
+            st.success("Requisição OK")
+            # mostrar parte da resposta
+            content = resp.choices[0].message.content
+            st.write("Resposta:", content)
+            st.write("Raw:", resp)
+        except Exception as e:
+            st.error("Erro na chamada API: " + str(e))
+            st.text(traceback.format_exc())
 
