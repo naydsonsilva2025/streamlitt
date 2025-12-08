@@ -74,8 +74,10 @@ def app():
         )
 
         with st.chat_message("assistant"):
-            st.markdown(resposta_texto)
-
+            try:
+        st.latex(resposta_texto)  # tenta renderizar como LaTeX
+    except:
+        st.markdown(resposta_texto)  # se não for LaTeX, mostra normal
 
 # Executa o app
 app()
@@ -122,6 +124,7 @@ st.sidebar.write("")
 # colunas
 
 colunas = st.columns(2)
+
 
 
 
