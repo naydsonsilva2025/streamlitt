@@ -1,5 +1,6 @@
 import streamlit as st
 from openai import OpenAI
+import os
 
 # 🔥 TEM QUE SER A PRIMEIRA COISA DO ARQUIVO
 st.set_page_config(
@@ -7,7 +8,9 @@ st.set_page_config(
     page_icon="https://static.vecteezy.com/ti/vetor-gratis/p1/23060823-chatgpt-conceito-artificial-inteligencia-chatbot-neon-logotipo-em-preto-fundo-gratis-vetor.jpg"
 )
 
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+client = OpenAI()
+
 
 def gerar_resposta(prompt):
     try:
@@ -98,3 +101,4 @@ st.sidebar.markdown("""
 * EMAIL : **naydsonsilvaaaa@gmail.com**
 * LOCALIDADE : **Volta do Moxoto - Jatoba - PE**
 """)
+
