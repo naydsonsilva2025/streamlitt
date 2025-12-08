@@ -59,38 +59,6 @@ def app():
     # Entrada do usuário
     mensagem_usuario = st.chat_input("Digite aqui sua mensagem...")
 
-    # Entrada de imagem do usuário
-    uploaded_image = st.file_uploader(
-        "Envie uma imagem (JPG, PNG)",
-        type=["jpg", "jpeg", "png"]
-    )
-
-    # Se imagem foi enviada
-    if uploaded_image is not None:
-        st.image(uploaded_image, caption="Imagem enviada", use_column_width=True)
-
-        image_bytes = uploaded_image.read()
-
-        resposta = client.responses.create(
-            model="gpt-4.1",  # ou gpt-4o-mini, se preferir multimodal oficial
-            input=[
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "input_text", "text": "Explique essa imagem."},
-                        {"type": "input_image", "image": image_bytes}
-                    ]
-                }
-            ]
-        )
-
-        # Exibir resposta da IA
-        resposta_texto = resposta.output_text
-
-        st.session_state["mensagens"].append({"usuario": "assistant", "texto": resposta_texto})
-        with st.chat_message("assistant"):
-            st.markdown(resposta_texto)
-
     if mensagem_usuario:
         st.session_state["mensagens"].append(
             {"usuario": "user", "texto": mensagem_usuario}
@@ -154,5 +122,6 @@ st.sidebar.write("")
 # colunas
 
 colunas = st.columns(2)
+
 
 
