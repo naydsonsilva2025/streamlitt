@@ -60,33 +60,33 @@ def app():
     mensagem_usuario = st.chat_input("Digite aqui sua mensagem...")
 
     if mensagem_usuario:
-    st.session_state["mensagens"].append(
-        {"usuario": "user", "texto": mensagem_usuario}
-    )
-
-    with st.chat_message("user"):
-        st.markdown(mensagem_usuario)
-
-    resposta_texto = gerar_resposta(mensagem_usuario)
-
-    st.session_state["mensagens"].append(
-        {"usuario": "assistant", "texto": resposta_texto}
-    )
-
-    with st.chat_message("assistant"):
-        if "$" in resposta_texto or "\\" in resposta_texto:
-            # Tenta quebrar a resposta em linhas latex
-            linhas = resposta_texto.split("\n")
-            for linha in linhas:
-                linha = linha.strip()
-                if linha.startswith("$$") and linha.endswith("$$"):
-                    st.latex(linha.replace("$$", ""))
-                elif linha.startswith("$") and linha.endswith("$"):
-                    st.latex(linha.replace("$", ""))
-                else:
-                    st.markdown(linha)
-        else:
-            st.markdown(resposta_texto)
+        st.session_state["mensagens"].append(
+            {"usuario": "user", "texto": mensagem_usuario}
+        )
+    
+        with st.chat_message("user"):
+            st.markdown(mensagem_usuario)
+    
+        resposta_texto = gerar_resposta(mensagem_usuario)
+    
+        st.session_state["mensagens"].append(
+            {"usuario": "assistant", "texto": resposta_texto}
+        )
+    
+        with st.chat_message("assistant"):
+            if "$" in resposta_texto or "\\" in resposta_texto:
+                # Tenta quebrar a resposta em linhas latex
+                linhas = resposta_texto.split("\n")
+                for linha in linhas:
+                    linha = linha.strip()
+                    if linha.startswith("$$") and linha.endswith("$$"):
+                        st.latex(linha.replace("$$", ""))
+                    elif linha.startswith("$") and linha.endswith("$"):
+                        st.latex(linha.replace("$", ""))
+                    else:
+                        st.markdown(linha)
+            else:
+                st.markdown(resposta_texto)
 
 # Executa o app
 app()
@@ -133,6 +133,7 @@ st.sidebar.write("")
 # colunas
 
 colunas = st.columns(2)
+
 
 
 
