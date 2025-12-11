@@ -74,43 +74,46 @@ def app():
         )
 
         # ------------ EXIBIÇÃO COM SUPORTE A LATEX BONITO -------------
-        with st.chat_message("assistant"):
+       with st.chat_message("assistant"):
             resposta = resposta_texto.strip()
-        
-            # Quebra em linhas para detectar LaTeX individualmente
             linhas = resposta.split("\n")
+        
+            bloco_latex = []
+            dentro_do_bloco = False
         
             for linha in linhas:
                 linha_strip = linha.strip()
         
-                # Detecta [ ... ]
-                if linha_strip.startswith("[") and linha_strip.endswith("]"):
-                    conteudo = linha_strip[1:-1].strip()
-                    st.latex(conteudo)
+                # Início de bloco LaTeX com [
+                if linha_strip == "[":
+                    dentro_do_bloco = True
+                    bloco_latex = []
+                    continue
         
-                # Detecta $$ ... $$
-                elif linha_strip.startswith("$$") and linha_strip.endswith("$"):
-                    conteudo = linha_strip.replace("$$", "")
+                # Fim de bloco LaTeX com ]
+                if linha_strip == "]" and dentro_do_bloco:
+                    dentro_do_bloco = False
+                    conteudo = "\n".join(bloco_latex).strip()
                     st.latex(conteudo)
+                    continue
         
-                # Detecta $ ... $
-                elif linha_strip.startswith("$") and linha_strip.endswith("$"):
-                    conteudo = linha_strip.replace("$", "")
-                    st.latex(conteudo)
+                # Se estiver dentro do bloco, adicionar a linha
+                if dentro_do_bloco:
+                    bloco_latex.append(linha_strip)
+                    continue
         
-                # Detecta \[ ... \]
+                # Linhas isoladas com LaTeX
+                if linha_strip.startswith("$") and linha_strip.endswith("$"):
+                    st.latex(linha_strip.replace("$", ""))
+                elif linha_strip.startswith("$$") and linha_strip.endswith("$$"):
+                    st.latex(linha_strip.replace("$$", ""))
                 elif linha_strip.startswith(r"\[") and linha_strip.endswith(r"\]"):
-                    conteudo = linha_strip[2:-2]
-                    st.latex(conteudo)
-        
-                # Detecta \( ... \)
+                    st.latex(linha_strip[2:-2])
                 elif linha_strip.startswith(r"\(") and linha_strip.endswith(r"\)"):
-                    conteudo = linha_strip[2:-2]
-                    st.latex(conteudo)
-        
-                # Se não for latex → imprime como texto normal
+                    st.latex(linha_strip[2:-2])
                 else:
                     st.markdown(linha)
+
 
 
 # Executa
@@ -157,6 +160,7 @@ st.sidebar.write("")
 
 # colunas
 colunas = st.columns(2)
+
 
 
 
