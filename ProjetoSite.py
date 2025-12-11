@@ -46,9 +46,6 @@ def app():
 
     st.image("image-Photoroom.png", width=50)
     st.title("Chatbot de IA")
-    if (nome != null):
-        st.write(f"Olá, {nome} !")
-
     # Inicializa o histórico
     if "mensagens" not in st.session_state:
         st.session_state["mensagens"] = []
@@ -135,6 +132,7 @@ st.sidebar.write("")
 # colunas
 
 colunas = st.columns(2)
+
 
 
 
