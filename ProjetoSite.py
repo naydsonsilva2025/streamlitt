@@ -46,11 +46,12 @@ def app():
 
     st.image("image-Photoroom.png", width=50)
     st.title("Chatbot de IA")
-    # Inicializa o histórico
+
+    # Histórico
     if "mensagens" not in st.session_state:
         st.session_state["mensagens"] = []
 
-    # Exibe mensagens anteriores
+    # Exibe mensagens
     for mensagem in st.session_state["mensagens"]:
         with st.chat_message(mensagem["usuario"]):
             st.markdown(mensagem["texto"])
@@ -62,49 +63,51 @@ def app():
         st.session_state["mensagens"].append(
             {"usuario": "user", "texto": mensagem_usuario}
         )
-    
+
         with st.chat_message("user"):
             st.markdown(mensagem_usuario)
-    
+
         resposta_texto = gerar_resposta(mensagem_usuario)
-    
+
         st.session_state["mensagens"].append(
             {"usuario": "assistant", "texto": resposta_texto}
         )
-    
+
+        # ------------ EXIBIÇÃO COM SUPORTE A LATEX BONITO -------------
         with st.chat_message("assistant"):
             resposta = resposta_texto.strip()
-        
-            # --- Detecta blocos LaTeX entre colchetes: [ ... ]  ---
+
+            # Detecta formato [ ... ]
             if resposta.startswith("[") and resposta.endswith("]"):
                 conteudo = resposta[1:-1].strip()
                 st.latex(conteudo)
-        
-            # --- Detecta $$ ... $$ ---
+
+            # Detecta $$ ... $$
             elif resposta.startswith("$$") and resposta.endswith("$$"):
                 conteudo = resposta.replace("$$", "")
                 st.latex(conteudo)
-        
-            # --- Detecta $ ... $ ---
+
+            # Detecta $ ... $
             elif resposta.startswith("$") and resposta.endswith("$"):
                 conteudo = resposta.replace("$", "")
                 st.latex(conteudo)
-        
-            # --- Detecta \[ ... \] ---
+
+            # Detecta \[ ... \]
             elif resposta.startswith(r"\[") and resposta.endswith(r"\]"):
                 conteudo = resposta[2:-2]
                 st.latex(conteudo)
-        
-            # --- Detecta \( ... \) ---
+
+            # Detecta \( ... \)
             elif resposta.startswith(r"\(") and resposta.endswith(r"\)"):
                 conteudo = resposta[2:-2]
                 st.latex(conteudo)
-        
-            # --- Caso não seja LaTeX ---
+
             else:
+                # Caso não seja LaTeX, mostrar normal
                 st.markdown(resposta)
 
-# Executa o app
+
+# Executa
 app()
 
 
@@ -147,8 +150,8 @@ st.sidebar.markdown("""
 st.sidebar.write("")
 
 # colunas
-
 colunas = st.columns(2)
+
 
 
 
