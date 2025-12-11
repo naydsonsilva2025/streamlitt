@@ -73,36 +73,36 @@ def app():
         )
     
         with st.chat_message("assistant"):
-    resposta = resposta_texto.strip()
-
-    # --- Detecta blocos LaTeX entre colchetes: [ ... ]  ---
-    if resposta.startswith("[") and resposta.endswith("]"):
-        conteudo = resposta[1:-1].strip()
-        st.latex(conteudo)
-
-    # --- Detecta $$ ... $$ ---
-    elif resposta.startswith("$$") and resposta.endswith("$$"):
-        conteudo = resposta.replace("$$", "")
-        st.latex(conteudo)
-
-    # --- Detecta $ ... $ ---
-    elif resposta.startswith("$") and resposta.endswith("$"):
-        conteudo = resposta.replace("$", "")
-        st.latex(conteudo)
-
-    # --- Detecta \[ ... \] ---
-    elif resposta.startswith(r"\[") and resposta.endswith(r"\]"):
-        conteudo = resposta[2:-2]
-        st.latex(conteudo)
-
-    # --- Detecta \( ... \) ---
-    elif resposta.startswith(r"\(") and resposta.endswith(r"\)"):
-        conteudo = resposta[2:-2]
-        st.latex(conteudo)
-
-    # --- Caso não seja LaTeX ---
-    else:
-        st.markdown(resposta)
+            resposta = resposta_texto.strip()
+        
+            # --- Detecta blocos LaTeX entre colchetes: [ ... ]  ---
+            if resposta.startswith("[") and resposta.endswith("]"):
+                conteudo = resposta[1:-1].strip()
+                st.latex(conteudo)
+        
+            # --- Detecta $$ ... $$ ---
+            elif resposta.startswith("$$") and resposta.endswith("$$"):
+                conteudo = resposta.replace("$$", "")
+                st.latex(conteudo)
+        
+            # --- Detecta $ ... $ ---
+            elif resposta.startswith("$") and resposta.endswith("$"):
+                conteudo = resposta.replace("$", "")
+                st.latex(conteudo)
+        
+            # --- Detecta \[ ... \] ---
+            elif resposta.startswith(r"\[") and resposta.endswith(r"\]"):
+                conteudo = resposta[2:-2]
+                st.latex(conteudo)
+        
+            # --- Detecta \( ... \) ---
+            elif resposta.startswith(r"\(") and resposta.endswith(r"\)"):
+                conteudo = resposta[2:-2]
+                st.latex(conteudo)
+        
+            # --- Caso não seja LaTeX ---
+            else:
+                st.markdown(resposta)
 
 # Executa o app
 app()
@@ -149,6 +149,7 @@ st.sidebar.write("")
 # colunas
 
 colunas = st.columns(2)
+
 
 
 
