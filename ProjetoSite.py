@@ -76,35 +76,41 @@ def app():
         # ------------ EXIBIÇÃO COM SUPORTE A LATEX BONITO -------------
         with st.chat_message("assistant"):
             resposta = resposta_texto.strip()
-
-            # Detecta formato [ ... ]
-            if resposta.startswith("[") and resposta.endswith("]"):
-                conteudo = resposta[1:-1].strip()
-                st.latex(conteudo)
-
-            # Detecta $$ ... $$
-            elif resposta.startswith("$$") and resposta.endswith("$$"):
-                conteudo = resposta.replace("$$", "")
-                st.latex(conteudo)
-
-            # Detecta $ ... $
-            elif resposta.startswith("$") and resposta.endswith("$"):
-                conteudo = resposta.replace("$", "")
-                st.latex(conteudo)
-
-            # Detecta \[ ... \]
-            elif resposta.startswith(r"\[") and resposta.endswith(r"\]"):
-                conteudo = resposta[2:-2]
-                st.latex(conteudo)
-
-            # Detecta \( ... \)
-            elif resposta.startswith(r"\(") and resposta.endswith(r"\)"):
-                conteudo = resposta[2:-2]
-                st.latex(conteudo)
-
-            else:
-                # Caso não seja LaTeX, mostrar normal
-                st.markdown(resposta)
+        
+            # Quebra em linhas para detectar LaTeX individualmente
+            linhas = resposta.split("\n")
+        
+            for linha in linhas:
+                linha_strip = linha.strip()
+        
+                # Detecta [ ... ]
+                if linha_strip.startswith("[") and linha_strip.endswith("]"):
+                    conteudo = linha_strip[1:-1].strip()
+                    st.latex(conteudo)
+        
+                # Detecta $$ ... $$
+                elif linha_strip.startswith("$$") and linha_strip.endswith("$"):
+                    conteudo = linha_strip.replace("$$", "")
+                    st.latex(conteudo)
+        
+                # Detecta $ ... $
+                elif linha_strip.startswith("$") and linha_strip.endswith("$"):
+                    conteudo = linha_strip.replace("$", "")
+                    st.latex(conteudo)
+        
+                # Detecta \[ ... \]
+                elif linha_strip.startswith(r"\[") and linha_strip.endswith(r"\]"):
+                    conteudo = linha_strip[2:-2]
+                    st.latex(conteudo)
+        
+                # Detecta \( ... \)
+                elif linha_strip.startswith(r"\(") and linha_strip.endswith(r"\)"):
+                    conteudo = linha_strip[2:-2]
+                    st.latex(conteudo)
+        
+                # Se não for latex → imprime como texto normal
+                else:
+                    st.markdown(linha)
 
 
 # Executa
@@ -151,6 +157,7 @@ st.sidebar.write("")
 
 # colunas
 colunas = st.columns(2)
+
 
 
 
