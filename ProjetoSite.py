@@ -73,19 +73,36 @@ def app():
         )
     
         with st.chat_message("assistant"):
-            if "$" in resposta_texto or "\\" in resposta_texto:
-                # Tenta quebrar a resposta em linhas latex
-                linhas = resposta_texto.split("\n")
-                for linha in linhas:
-                    linha = linha.strip()
-                    if linha.startswith("$$") and linha.endswith("$$"):
-                        st.latex(linha.replace("$$", ""))
-                    elif linha.startswith("$") and linha.endswith("$"):
-                        st.latex(linha.replace("$", ""))
-                    else:
-                        st.markdown(linha)
-            else:
-                st.markdown(resposta_texto)
+    resposta = resposta_texto.strip()
+
+    # --- Detecta blocos LaTeX entre colchetes: [ ... ]  ---
+    if resposta.startswith("[") and resposta.endswith("]"):
+        conteudo = resposta[1:-1].strip()
+        st.latex(conteudo)
+
+    # --- Detecta $$ ... $$ ---
+    elif resposta.startswith("$$") and resposta.endswith("$$"):
+        conteudo = resposta.replace("$$", "")
+        st.latex(conteudo)
+
+    # --- Detecta $ ... $ ---
+    elif resposta.startswith("$") and resposta.endswith("$"):
+        conteudo = resposta.replace("$", "")
+        st.latex(conteudo)
+
+    # --- Detecta \[ ... \] ---
+    elif resposta.startswith(r"\[") and resposta.endswith(r"\]"):
+        conteudo = resposta[2:-2]
+        st.latex(conteudo)
+
+    # --- Detecta \( ... \) ---
+    elif resposta.startswith(r"\(") and resposta.endswith(r"\)"):
+        conteudo = resposta[2:-2]
+        st.latex(conteudo)
+
+    # --- Caso não seja LaTeX ---
+    else:
+        st.markdown(resposta)
 
 # Executa o app
 app()
@@ -107,7 +124,7 @@ if nome:
     if st.sidebar.button("Selecionar"):
         st.sidebar.success("Armazenado com sucesso!")
         st.sidebar.write(
-            f"## Olá, **{nome.capitalize()}**!\nVenha conversar comigo."
+            f"## Olá, {nome.capitalize()}!\nVenha conversar comigo."
         )
 
 st.sidebar.header("", divider=True)
@@ -132,6 +149,7 @@ st.sidebar.write("")
 # colunas
 
 colunas = st.columns(2)
+
 
 
 
