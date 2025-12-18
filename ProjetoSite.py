@@ -9,7 +9,6 @@ st.set_page_config(
     page_title="ChatBot - Naydson",
     page_icon="https://static.vecteezy.com/ti/vetor-gratis/p1/23060823-chatgpt-conceito-artificial-inteligencia-chatbot-neon-logotipo-em-preto-fundo-gratis-vetor.jpg"
 )
-st.write("Olá, venha conversar comigo !");
 
 # ---------------------------------------------------------
 # CARREGA SECRET DA OPENAI
@@ -162,6 +161,7 @@ st.sidebar.write("")
 
 # colunas
 colunas = st.columns(2)
+
 
 
 
