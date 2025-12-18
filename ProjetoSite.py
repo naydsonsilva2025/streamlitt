@@ -141,7 +141,7 @@ if nome:
         )
 
 st.sidebar.header("", divider=True)
-st.sidebar.header("Informações do meu desenvolvedor")
+st.sidebar.header("Informações do desenvolvedor")
 
 st.sidebar.image(
     "Captura de tela 2025-11-15 180148.png",
@@ -161,6 +161,7 @@ st.sidebar.write("")
 
 # colunas
 colunas = st.columns(2)
+
 
 
 
